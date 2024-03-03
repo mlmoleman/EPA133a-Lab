@@ -1,3 +1,5 @@
+import random
+
 from mesa import Agent
 from enum import Enum
 
@@ -46,7 +48,10 @@ class Bridge(Infra):
 
     delay_time: int
         the delay (in ticks) caused by this bridge
-    ...
+
+    collapse_chance: float
+        the chance that a bridge can collapse, based on the condtion of the bridge
+
 
     """
 
@@ -55,6 +60,8 @@ class Bridge(Infra):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
+        #the collapse chance of a bridge is determined based on the key, value pairs in the dictionary attribute of the model.
+        self.collapse_chance = self.model.collapse_dict.get(self.condition)
 
         # TODO
         self.delay_time = self.random.randrange(0, 10)
@@ -62,7 +69,38 @@ class Bridge(Infra):
 
     # TODO
     def get_delay_time(self):
+
         return self.delay_time
+    def change_condition(self, new_conditon: str):
+        """Change the condition of a bridge to another condition"""
+        self.condition = new_conditon
+        return self.condition
+
+    def collapse(self):
+        """A bridge collapses according to its chance of collapsing.
+         A collapsed bridge will get the condition 'X'. """
+        if self.collapse_chance>random.random():
+            self.change_condition("X")
+        else:
+            pass
+        return
+
+    def deteriorate(self):
+        """A bridge's condition deteriorates"""
+        # you can call this function in the model class,
+        # so that for every certain amount of time,bridge conditions deteriorate
+        # or for example,if a small storm happens,bridge conditions can deteriorate.
+        # please note that deterioration of a bridge is not the same as collapse of a bridge!
+
+        condition_list = ["A","B","C","D","X"] #list of all possible bridge conditions
+        #if a bridge is already in the worst condition ("X"), it cannot deteriorate any further
+        if self.condition == "X":
+            pass
+        else:
+            #for the remaining conditions, deteriorate the bridge by setting the condition to one condition worse
+            condition_index = condition_list.index(self.condition) #get the index in the condition_list of the current bridge condition
+            self.condition = condition_list[condition_index+1] #increase index by 1 and set that condition to the new current bridge condition
+            return self.condition
 
 
 # ---------------------------------------------------------------

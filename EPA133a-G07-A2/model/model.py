@@ -51,11 +51,15 @@ class BangladeshModel(Model):
     sinks: list
         all sinks in the network
 
+    collapse_dict: defaultdict
+    Key: condition
+    Value: the chance that a bridge will collapse for a certain condition
+
     """
 
     step_time = 1
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, collapse_dict = {'A':0.10,'B':0.25,'C':0.50,'D':0.75}):
 
         self.schedule = BaseScheduler(self)
         self.running = True
