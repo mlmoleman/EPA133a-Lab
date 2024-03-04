@@ -61,6 +61,7 @@ class BangladeshModel(Model):
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, collapse_dict = {'A':0.10,'B':0.25,'C':0.50,'D':0.75}):
 
+        self.collapse_dict = collapse_dict
         self.schedule = BaseScheduler(self)
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())

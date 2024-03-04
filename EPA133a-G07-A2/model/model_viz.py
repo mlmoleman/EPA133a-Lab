@@ -67,7 +67,7 @@ canvas_width = 400
 canvas_height = 400
 
 space = SimpleCanvas(agent_portrayal, canvas_width, canvas_height)
-
+#collapse_dict = {'A':0.10,'B':0.25,'C':0.50,'D':0.75}
 server = ModularServer(BangladeshModel,
                        [space],
                        "Transport Model Demo",
