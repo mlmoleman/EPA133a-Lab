@@ -1,0 +1,16 @@
+﻿road,id,model_type,name,lat,lon,length
+N1,200000,source,name1,0,0,4
+N1,200001,link,name2,12.5,6.25,1800
+N1,200002,bridge,name3,25,12.5,200
+N1,200003,link,name4,25,25,1500
+N1,200004,bridge,Anarpara Bridge (L,25,37.5,8
+N1,200005,bridge,Anarpara Bridge (R,25,37.5,8
+N1,200006,link,name6,37.5,43.75,1700
+N1,200007,bridge,name7,50,50,20
+N1,200008,link,name8,62.5,56.25,1700
+N1,200009,bridge,Darikandi Bridge (L,75,62.5,50
+N1,200010,bridge,Darikandi Bridge (R,75,62.5,50
+N1,200011,link,name10,75,75,2000
+N1,200012,bridge,name11,75,87.5,400
+N1,200013,link,name12,87.5,93.75,1500
+N1,200014,sink,name13,100,100,20
