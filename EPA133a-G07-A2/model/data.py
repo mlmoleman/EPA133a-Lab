@@ -250,7 +250,7 @@ def convert_data():
     df.index = df.index + 1
 
     # drop specific cases which are not considered by algorithm
-    df = df.drop([605, 616, 617, 621])
+    df = df.drop([514, 605, 616, 617, 621])
 
     # reset index
     df.sort_index(inplace=True) 
