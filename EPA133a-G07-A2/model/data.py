@@ -247,7 +247,11 @@ def convert_data():
     df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
               condition, latitude, longitude, type_of_bridge]
     # shifting index
-    df.index = df.index + 1  
+    df.index = df.index + 1
+
+    # drop specific cases which are not considered by algorithm
+    df = df.drop([605, 616, 617, 621])
+
     # reset index
     df.sort_index(inplace=True) 
     
