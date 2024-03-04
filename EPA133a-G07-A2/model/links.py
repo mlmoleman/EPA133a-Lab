@@ -29,10 +29,10 @@ def create_links(df, indexes):
             # if that is the case insert link
             # determine the length of the link by calculating the difference in km of the bridges
             # and substracting half of the length of the bridges.
-            length = (1000*df.iloc[i, df.columns.get_indexer(['km'])].values
+            length = abs((1000*df.iloc[i, df.columns.get_indexer(['km'])].values
                       - 1000*df.iloc[i-1, df.columns.get_indexer(['km'])].values
                       - 0.5*df.iloc[i, df.columns.get_indexer(['length'])].values
-                      - 0.5*df.iloc[i-1, df.columns.get_indexer(['length'])].values)
+                      - 0.5*df.iloc[i-1, df.columns.get_indexer(['length'])].values))
             # Calculate the km of the link by taking the average
             km = (df.iloc[i, df.columns.get_indexer(['km'])].values[0]+df.iloc[i-1, df.columns.get_indexer(['km'])].values[0])/2
             # Calculate the latitude of the link by interpolating
