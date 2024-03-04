@@ -1,6 +1,6 @@
 import pandas as pd
 import random
-
+import os
 
 def convert_data():
     """
@@ -8,7 +8,10 @@ def convert_data():
     """
 
     # import data
-    df = pd.read_excel('../data/bridges.xlsx')
+    path = os.path.normpath(os.getcwd() + os.sep + os.pardir)
+    df = pd.read_excel(path+'\\data\\bridges.xlsx')
+    
+
 
     # slice data information
     df = df[["road", "km", "type", "name", "length", "condition", "lat", "lon"]]
@@ -197,7 +200,8 @@ def convert_data():
     df['model_type'] = 'bridge'
     
     # import roads to get source and sink
-    df_roads = pd.read_csv('../data/roads.csv')
+
+    df_roads = pd.read_csv(path+"\\EPA133a-G07-A2\\data\\roads.csv")
     # select only N1 data entries
     df_roads = df_roads[df_roads['road'] == 'N1']
     
@@ -247,6 +251,6 @@ def convert_data():
     df.sort_index(inplace=True) 
     
     # convert dataframe to csv
-    df.to_csv('../data/bridges_cleaned.csv')
+    df.to_csv(path+"\\data\\bridges_cleaned.csv")
 
 convert_data()
