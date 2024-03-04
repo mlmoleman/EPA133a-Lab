@@ -187,15 +187,24 @@ def convert_data():
         
     # FORMAT DATAFRAME CONFORM DEMO FILES
     
+    # reverse order 
+    df = df.iloc[::-1]
+    
+    # add model type
+    df['model_type'] = 'bridge'
+    
+    # subset dataframe based on N1 road
+    df = df[df['road'] == 'N1']
+    
+    # sort values based on km, in reversed direction to drive in opposite direction
+    df = df.sort_values(by = 'km', ascending = False)
+    
     # reset index
     df = df.reset_index()
     
     # drop unnecessary columns
     df = df.drop("conditionNum", axis='columns')
     df = df.drop("index", axis='columns')
-    
-    # add model type
-    df['model_type'] = 'bridge'
     
     # import roads to get source and sink
     df_roads = pd.read_csv('../data/roads.csv')
@@ -215,14 +224,9 @@ def convert_data():
     length = 0
     condition = 'A'
     
-    # subset dataframe based on N1 road
-    df = df[df['road'] == 'N1']
-    
     # adding new row
-    df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
+    df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, 
                   condition, latitude, longitude, type_of_bridge]  
-    # shifting index
-    df.index = df.index + 1  
     # sort index
     df.sort_index(inplace=True) 
     
@@ -242,10 +246,14 @@ def convert_data():
     condition = 'A'
     
     # adding new row
-    df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, 
+    df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
               condition, latitude, longitude, type_of_bridge]
+    # shifting index
+    df.index = df.index + 1  
     # reset index
     df.sort_index(inplace=True) 
     
     # convert dataframe to csv
     df.to_csv('../data/bridges_cleaned.csv')
+
+convert_data()
