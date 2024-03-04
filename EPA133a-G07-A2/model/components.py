@@ -69,8 +69,12 @@ class Bridge(Infra):
 
     # TODO
     def get_delay_time(self):
-
         return self.delay_time
+
+    # Retrieve bridges name to choose between L/R bridge
+    def get_name(self):
+        return self.name
+
     def change_condition(self, new_conditon: str):
         """Change the condition of a bridge to another condition"""
         self.condition = new_conditon
@@ -253,6 +257,8 @@ class Vehicle(Agent):
         self.waiting_time = 0
         self.waited_at = None
         self.removed_at_step = None
+        # set an attribute 'next_infra_name' to distinguish the L and R bridge
+        self.next_infra_name = None
 
     def __str__(self):
         return "Vehicle" + str(self.unique_id) + \
@@ -314,6 +320,14 @@ class Vehicle(Agent):
             self.location.remove(self)
             return
         elif isinstance(next_infra, Bridge):
+            # check if the next bridge is an L or R bridge
+            self.next_infra_name = next_infra.get_name()
+            print(str(self.unique_id), 'will go to next bridge:', self.next_infra_name, ', with location ID', next_id)
+            if self.next_infra_name[-2:] == '(R':
+                self.next_infra_location = next_infra.unique_id
+                print(str(self.unique_id), 'now in', str(self.location), 'will skip the "R" bridge in the next step')
+                return next_infra
+
             self.waiting_time = next_infra.get_delay_time()
             if self.waiting_time > 0:
                 # arrive at the bridge and wait
