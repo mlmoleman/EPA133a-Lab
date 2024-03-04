@@ -69,6 +69,10 @@ class BangladeshModel(Model):
         self.sources = []
         self.sinks = []
 
+        self.long_length_threshold = 200
+        self.medium_length_threshold = 50
+        self.short_length_threshold = 10
+
         self.generate_model()
 
     def generate_model(self):

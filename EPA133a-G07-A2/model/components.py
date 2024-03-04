@@ -3,7 +3,6 @@ import random
 from mesa import Agent
 from enum import Enum
 
-
 # ---------------------------------------------------------------
 class Infra(Agent):
     """
@@ -69,6 +68,14 @@ class Bridge(Infra):
 
     # TODO
     def get_delay_time(self):
+        if self.length > self.model.long_length_threshold:
+            self.delay_time = random.triangular(60, 240, 120)
+        elif self.length > self.model.medium_length_threshold:
+            self.delay_time = random.uniform(45, 90)
+        elif self.length > self.model.short_length_threshold:
+            self.delay_time = random.uniform(15, 60)
+        else:
+            self.delay_time = random.uniform(10, 20)
         return self.delay_time
 
     # Retrieve bridges name to choose between L/R bridge
