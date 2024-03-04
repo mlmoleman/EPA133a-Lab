@@ -44,8 +44,6 @@ def create_links(df, indexes):
     return inserting_links
 
 dict_links = create_links(df_N1_sorted, index)
-
-dict_links = create_links(df_N1_sorted, index)
 #%%
 # Create a function to insert the links into the main dataframe
 def insert_links(df, dict_links):
@@ -70,6 +68,8 @@ def insert_links(df, dict_links):
 
 # Call the function to check the outcome
 main_df = insert_links(df_N1_sorted, dict_links)
+# Adding an id to every object
+main_df['id'] = main_df.index
 
 # Convert dataframe into csv
 main_df.to_csv('../data/bridges_cleaned_linked.csv')
