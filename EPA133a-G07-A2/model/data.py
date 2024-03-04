@@ -216,11 +216,10 @@ def convert_data():
     # retrieve source characteristics
     road_name = df_roads_0.road[0]
     km = df_roads_0.chainage[0]
-    lrp = df_roads_0.lrp[0]
     latitude = df_roads_0.lat[0]
     longitude = df_roads_0.lon[0]
-    type_of_bridge = 'source'
-    bridge_name = 'source'
+    type_of_bridge = 'sink'
+    bridge_name = 'sink'
     length = 0
     condition = 'A'
     
@@ -237,11 +236,10 @@ def convert_data():
     # retrieve sink characteristics
     road_name = df_roads_last.loc[0, 'road']
     km = df_roads_last.loc[0, 'chainage']
-    lrp = df_roads_last.loc[0, 'lrp']
     latitude = df_roads_last.loc[0, 'lat']
     longitude = df_roads_last.loc[0, 'lon']
-    type_of_bridge = 'sink'
-    bridge_name = 'sink'
+    type_of_bridge = 'source'
+    bridge_name = 'source'
     length = 0
     condition = 'A'
     
