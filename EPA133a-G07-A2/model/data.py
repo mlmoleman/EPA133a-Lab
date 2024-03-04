@@ -205,7 +205,7 @@ def convert_data():
     # drop unnecessary columns
     df = df.drop("conditionNum", axis='columns')
     df = df.drop("index", axis='columns')
-    
+
     # import roads to get source and sink
     df_roads = pd.read_csv('../data/roads.csv')
     # select only N1 data entries
@@ -248,9 +248,6 @@ def convert_data():
               condition, latitude, longitude, type_of_bridge]
     # shifting index
     df.index = df.index + 1
-
-    # drop specific cases which are not considered by algorithm
-    df = df.drop([514, 605, 616, 617, 621])
 
     # reset index
     df.sort_index(inplace=True) 
