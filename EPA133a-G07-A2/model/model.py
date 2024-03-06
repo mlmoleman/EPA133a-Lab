@@ -2,14 +2,82 @@ from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
 from mesa.datacollection import DataCollector
-from components import Source, Sink, SourceSink, Bridge, Link
+from components import Source, Sink, SourceSink, Bridge, Link, Vehicle  # import Vehicle agent class too
 import pandas as pd
 from collections import defaultdict
+from statistics import mean
 
 
 # ---------------------------------------------------------------
 def get_steps(model):
     return model.schedule.steps
+
+
+def get_avg_delay(model):
+    """
+    Returns the average delay time
+    """
+    delays = [a.delay_time for a in model.schedule.agents if isinstance(a, Bridge)]
+    return mean(delays)
+
+
+def get_avg_driving(model):
+    """
+    Returns the average driving time of vehicles on road N1
+    """
+    driving_time = [a.driving_time for a in model.schedule.agents if isinstance(a, Vehicle)]
+    if len(driving_time) > 0:
+        return mean(driving_time)
+    else:
+        return 0
+
+
+def get_conditions(model) -> object:
+    """
+    Returns the frequency of conditions for each step
+    """
+    conditions = [a.condition for a in model.schedule.agents if isinstance(a, Bridge)]
+    freq_a = conditions.count('A')  # retrieve frequency of condition A in list of conditions per step
+    freq_b = conditions.count('B')  # retrieve frequency of condition B in list of conditions per step
+    freq_c = conditions.count('C')  # retrieve frequency of condition C in list of conditions per step
+    freq_d = conditions.count('D')  # retrieve frequency of condition D in list of conditions per step
+    freq_x = conditions.count('X')  # retrieve frequency of condition X in list of conditions per step
+    return freq_a, freq_b, freq_c, freq_d, freq_x  # return frequencies
+
+
+def get_condition_frequency_a(model):
+    """
+    Retrieve the frequency of condition A
+    """
+    return get_conditions(model)[0]
+
+
+def get_condition_frequency_b(model):
+    """
+    Retrieve the frequency of condition B
+    """
+    return get_conditions(model)[1]
+
+
+def get_condition_frequency_c(model):
+    """
+    Retrieve the frequency of condition C
+    """
+    return get_conditions(model)[2]
+
+
+def get_condition_frequency_d(model):
+    """
+    Retrieve the frequency of condition D
+    """
+    return get_conditions(model)[3]
+
+
+def get_condition_frequency_x(model):
+    """
+    Retrieve the frequency of condition X
+    """
+    return get_conditions(model)[4]
 
 
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -64,7 +132,8 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, collapse_dict = {'A': 0.10, 'B':0.10, 'C':0.10, 'D':0.10, 'X':0}):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0,
+                 collapse_dict={'A': 0.10, 'B': 0.10, 'C': 0.10, 'D': 0.10, 'X': 0}):
 
         self.collapse_dict = collapse_dict
         self.schedule = BaseScheduler(self)
@@ -163,19 +232,29 @@ class BangladeshModel(Model):
 
         # define the model metrics we want to extract for each model run
         model_metrics = {
-                        "Step" : get_steps
-                        }
+                        "step": get_steps,
+                        "avg_delay": get_avg_delay,
+                        "avg_driving_time": get_avg_driving,
+                        "conditionA": get_condition_frequency_a,
+                        "conditionB": get_condition_frequency_b,
+                        "conditionC": get_condition_frequency_c,
+                        "conditionD": get_condition_frequency_d,
+                        "conditionX": get_condition_frequency_x
+        }
         # define the agent metrics we want to extract for each model run, only for bridges
         agent_metrics = {
-                        "condition" : (lambda a: a.condition if isinstance(a, Bridge) else None),
-                        "delay time" : (lambda a: a.delay_time if isinstance(a, Bridge) else None),
-                        "repair" : (lambda a: a.in_repair if isinstance(a, Bridge) else None),
-                        "repair time" : (lambda a: a.repair_time if isinstance(a, Bridge) else None),
-                        "collapse chance" : (lambda a: a.collapse_chance if isinstance(a, Bridge) else None)
+                        "driving time": (lambda a: a.driving_time if isinstance(a, Vehicle) else None),
+                        "vehicle_count": lambda a: getattr(a, "vehicle_count", None),
+                        "condition": (lambda a: a.condition if isinstance(a, Bridge) else None),
+                        "delay time": (lambda a: a.delay_time if isinstance(a, Bridge) else None),
+                        "repair": (lambda a: a.in_repair if isinstance(a, Bridge) else None),
+                        "repair time": (lambda a: a.repair_time if isinstance(a, Bridge) else None),
+                        "collapse chance": (lambda a: a.collapse_chance if isinstance(a, Bridge) else None),
+                        "waiting time": lambda a: getattr(a, "waiting_time", None)
                         }
 
-        #set up the data collector
-        self.datacollector = DataCollector(model_reporters=model_metrics,agent_reporters=agent_metrics)
+        # set up the data collector
+        self.datacollector = DataCollector(model_reporters=model_metrics, agent_reporters=agent_metrics)
 
     def get_random_route(self, source):
         """

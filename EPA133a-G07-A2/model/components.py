@@ -111,23 +111,22 @@ class Bridge(Infra):
         # or for example,if a small storm happens,bridge conditions can deteriorate.
         # please note that deterioration of a bridge is not the same as collapse of a bridge!
 
-        condition_list = ["A","B","C","D","X"] #list of all possible bridge conditions
-        #if a bridge is already in the worst condition ("X"), it cannot deteriorate any further
+        condition_list = ["A","B","C","D","X"] # list of all possible bridge conditions
+        # if a bridge is already in the worst condition ("X"), it cannot deteriorate any further
         if self.condition == "X":
             pass
         else:
-            #for the remaining conditions, deteriorate the bridge by setting the condition to one condition worse
-            condition_index = condition_list.index(self.condition) #get the index in the condition_list of the current bridge condition
-            self.condition = condition_list[condition_index+1] #increase index by 1 and set that condition to the new current bridge condition
+            # for the remaining conditions, deteriorate the bridge by setting the condition to one condition worse
+            condition_index = condition_list.index(self.condition) # get the index in the condition_list of the current bridge condition
+            self.condition = condition_list[condition_index+1] # increase index by 1 and set that condition to the new current bridge condition
             return self.condition
 
-
     def check_repair(self):
-        #if the bridge is not yet in repair, but it is collapsed, set it in repair status
+        # if the bridge is not yet in repair, but it is collapsed, set it in repair status
         if not self.in_repair and self.condition=="X":
             self.in_repair = True
             self.delay_time = self.get_delay_time()
-        #if bridge is in repair, check if its repair time is already finished
+        # if bridge is in repair, check if its repair time is already finished
         elif self.in_repair:
             if self.repair_time == 0:
                 self.finish_repair()
@@ -136,19 +135,21 @@ class Bridge(Infra):
                 self.repair_time -= 1
         return
 
-
     def finish_repair(self):
-        """ A bridge is repaired"""
+        """
+        A bridge is repaired
+        """
 
         # repair the bridge by setting the condition to condition A
-        # condition before collapse would also be possible. But assumption was made that bridge condition will increase when repairing bridge.
-        #if the counter is zero, change the condition
+        # condition before collapse would also be possible. But assumption was made that bridge condition will
+        # increase when repairing bridge.
+        # if the counter is zero, change the condition
         self.change_condition("A")
         # reset repair time of bridge
         self.repair_time = self.get_repair_time()
         # set in_repair to False
         self.in_repair = False
-        #bridge will not be delayed due to repair anymore, so set delay_time back to 0
+        # bridge will not be delayed due to repair anymore, so set delay_time back to 0
         self.delay_time = 0
         return
 
@@ -185,7 +186,6 @@ class Sink(Infra):
 
 
 # ---------------------------------------------------------------
-
 class Source(Infra):
     """
     Source generates vehicles
@@ -311,6 +311,7 @@ class Vehicle(Agent):
         self.removed_at_step = None
         # set an attribute 'next_infra_name' to distinguish the L and R bridge
         self.next_infra_name = None
+        self.driving_time = 0
 
     def __str__(self):
         return "Vehicle" + str(self.unique_id) + \
@@ -341,6 +342,12 @@ class Vehicle(Agent):
         To print the vehicle trajectory at each step
         """
         print(self)
+
+        """
+        To compute the driving time at that current step
+        """
+        if self.removed_at_step:
+            self.driving_time = self.removed_at_step - self.generated_at_step
 
     def drive(self):
 
