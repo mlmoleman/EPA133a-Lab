@@ -1,5 +1,4 @@
 import pandas as pd
-import random
 from model import BangladeshModel
 from mesa import batch_run
 
