@@ -64,7 +64,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, collapse_dict = {}):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, collapse_dict = {'A': 0.10, 'B':0.10, 'C':0.10, 'D':0.10, 'X':0}):
 
         self.collapse_dict = collapse_dict
         self.schedule = BaseScheduler(self)
