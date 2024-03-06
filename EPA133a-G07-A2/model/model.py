@@ -1,12 +1,17 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
+from mesa.datacollection import DataCollector
 from components import Source, Sink, SourceSink, Bridge, Link
 import pandas as pd
 from collections import defaultdict
 
 
 # ---------------------------------------------------------------
+def get_steps(model):
+    return model.schedule.steps
+
+
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     """
     Set the HTML continuous space canvas bounding box (for visualization)
@@ -145,7 +150,7 @@ class BangladeshModel(Model):
                     self.sources.append(agent.unique_id)
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
-                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'])
+                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'])
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
 
@@ -155,6 +160,22 @@ class BangladeshModel(Model):
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
+
+        # define the model metrics we want to extract for each model run
+        model_metrics = {
+                        "Step" : get_steps
+                        }
+        # define the agent metrics we want to extract for each model run, only for bridges
+        agent_metrics = {
+                        "condition" : (lambda a: a.condition if isinstance(a, Bridge) else None),
+                        "delay time" : (lambda a: a.delay_time if isinstance(a, Bridge) else None),
+                        "repair" : (lambda a: a.in_repair if isinstance(a, Bridge) else None),
+                        "repair time" : (lambda a: a.repair_time if isinstance(a, Bridge) else None),
+                        "collapse chance" : (lambda a: a.collapse_chance if isinstance(a, Bridge) else None)
+                        }
+
+        #set up the data collector
+        self.datacollector = DataCollector(model_reporters=model_metrics,agent_reporters=agent_metrics)
 
     def get_random_route(self, source):
         """
@@ -169,8 +190,13 @@ class BangladeshModel(Model):
 
     def step(self):
         """
-        Advance the simulation by one step.
+        Collect data and advance the simulation by one step.
         """
+
+        # collect the model data and add them to the results table
+        self.datacollector.collect(self)
+
+        # now lets step the model
         self.schedule.step()
 
 

@@ -221,7 +221,7 @@ def convert_data():
     type_of_bridge = 'sink'
     bridge_name = 'sink'
     length = 0
-    condition = 'A'
+    condition = None
     
     # adding new row
     df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, 
@@ -241,7 +241,7 @@ def convert_data():
     type_of_bridge = 'source'
     bridge_name = 'source'
     length = 0
-    condition = 'A'
+    condition = None
     
     # adding new row
     df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
