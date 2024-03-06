@@ -69,6 +69,10 @@ class BangladeshModel(Model):
         self.sources = []
         self.sinks = []
 
+        self.long_length_threshold = 200
+        self.medium_length_threshold = 50
+        self.short_length_threshold = 10
+
         self.generate_model()
 
     def generate_model(self):
@@ -78,7 +82,7 @@ class BangladeshModel(Model):
         Warning: the labels are the same as the csv column labels
         """
 
-        df = pd.read_csv('../data/demo-1.csv')
+        df = pd.read_csv('../data/bridges_cleaned_linked.csv')
 
         # a list of names of roads to be generated
         roads = ['N1']

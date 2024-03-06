@@ -14,7 +14,8 @@ def convert_data():
     df = df[["road", "km", "type", "name", "length", "condition", "lat", "lon"]]
     
     # HANDLING MISSING VALUES
-
+    
+    
     # change NaN values in name with dot i.e. '.'
     df['name'].fillna('.', inplace=True)
     
@@ -186,16 +187,25 @@ def convert_data():
         
     # FORMAT DATAFRAME CONFORM DEMO FILES
     
+    # reverse order 
+    df = df.iloc[::-1]
+    
+    # add model type
+    df['model_type'] = 'bridge'
+    
+    # subset dataframe based on N1 road
+    df = df[df['road'] == 'N1']
+    
+    # sort values based on km, in reversed direction to drive in opposite direction
+    df = df.sort_values(by = 'km', ascending = False)
+    
     # reset index
     df = df.reset_index()
     
     # drop unnecessary columns
     df = df.drop("conditionNum", axis='columns')
     df = df.drop("index", axis='columns')
-    
-    # add model type
-    df['model_type'] = 'bridge'
-    
+
     # import roads to get source and sink
     df_roads = pd.read_csv('../data/roads.csv')
     # select only N1 data entries
@@ -206,22 +216,16 @@ def convert_data():
     # retrieve source characteristics
     road_name = df_roads_0.road[0]
     km = df_roads_0.chainage[0]
-    lrp = df_roads_0.lrp[0]
     latitude = df_roads_0.lat[0]
     longitude = df_roads_0.lon[0]
-    type_of_bridge = 'source'
-    bridge_name = 'source'
+    type_of_bridge = 'sink'
+    bridge_name = 'sink'
     length = 0
     condition = 'A'
     
-    # subset dataframe based on N1 road
-    df = df[df['road'] == 'N1']
-    
     # adding new row
-    df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
+    df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, 
                   condition, latitude, longitude, type_of_bridge]  
-    # shifting index
-    df.index = df.index + 1  
     # sort index
     df.sort_index(inplace=True) 
     
@@ -232,17 +236,19 @@ def convert_data():
     # retrieve sink characteristics
     road_name = df_roads_last.loc[0, 'road']
     km = df_roads_last.loc[0, 'chainage']
-    lrp = df_roads_last.loc[0, 'lrp']
     latitude = df_roads_last.loc[0, 'lat']
     longitude = df_roads_last.loc[0, 'lon']
-    type_of_bridge = 'sink'
-    bridge_name = 'sink'
+    type_of_bridge = 'source'
+    bridge_name = 'source'
     length = 0
     condition = 'A'
     
     # adding new row
-    df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, 
+    df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
               condition, latitude, longitude, type_of_bridge]
+    # shifting index
+    df.index = df.index + 1
+
     # reset index
     df.sort_index(inplace=True) 
     
