@@ -126,6 +126,7 @@ class Bridge(Infra):
         #if the bridge is not yet in repair, but it is collapsed, set it in repair status
         if not self.in_repair and self.condition=="X":
             self.in_repair = True
+            self.delay_time = self.get_delay_time()
         #if bridge is in repair, check if its repair time is already finished
         elif self.in_repair:
             if self.repair_time == 0:
@@ -150,6 +151,14 @@ class Bridge(Infra):
         #bridge will not be delayed due to repair anymore, so set delay_time back to 0
         self.delay_time = 0
         return
+
+    def step(self):
+        # first, the bridge has a chance to collapse. This is done in the collapse function.
+        self.collapse()
+        # Optional: let the bridge deteriorate
+        # self.deteriorate()
+        # Next, check if bridge needs repair and if repair is finished.
+        self.check_repair()
 # ---------------------------------------------------------------
 class Link(Infra):
     pass

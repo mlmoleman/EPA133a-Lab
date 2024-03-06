@@ -40,7 +40,7 @@ def create_links(df, indexes):
             # Calculate the longitude of the link by interpolating
             lon = (df.iloc[i, df.columns.get_indexer(['lon'])].values[0]+df.iloc[i-1, df.columns.get_indexer(['lon'])].values[0])/2
             # Add the link to the dictionary with the necessary attributes
-            inserting_links[i] = {'road': ['N1'], 'km': [km], 'type': ['link'], 'name': ['link'], 'length': [round(length[0])], 'condition': ['A'], 'lat': [lat], 'lon': [lon], 'model_type': ['link']}
+            inserting_links[i] = {'road': ['N1'], 'km': [km], 'type': ['link'], 'name': ['link'], 'length': [round(length[0])], 'condition': None, 'lat': [lat], 'lon': [lon], 'model_type': ['link']}
     return inserting_links
 
 dict_links = create_links(df_N1_sorted, index)
