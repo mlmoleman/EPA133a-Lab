@@ -1,6 +1,14 @@
 import pandas as pd
+import random
 from model import BangladeshModel
 from mesa import batch_run
+
+"""
+    Run simulation
+    Perform batchrunner
+"""
+
+# ---------------------------------------------------------------
 
 params = {collaps_dict = [{'A': 0, 'B': 0, 'C': 0, 'D': 0.05},
                           {'A': 0, 'B': 0, 'C': 0, 'D': 0.10},
