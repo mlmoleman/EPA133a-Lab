@@ -69,19 +69,22 @@ class Bridge(Infra):
 
     # TODO
     def get_delay_time(self):
-        if self.length > self.model.long_length_threshold:
-            self.delay_time = random.triangular(60, 240, 120)
-        elif self.length > self.model.medium_length_threshold:
-            self.delay_time = random.uniform(45, 90)
-        elif self.length > self.model.short_length_threshold:
-            self.delay_time = random.uniform(15, 60)
+        if self.condition == "X":
+            if self.length > self.model.long_length_threshold:
+                self.delay_time = random.triangular(60, 240, 120)
+            elif self.length > self.model.medium_length_threshold:
+                self.delay_time = random.uniform(45, 90)
+            elif self.length > self.model.short_length_threshold:
+                self.delay_time = random.uniform(15, 60)
+            else:
+                self.delay_time = random.uniform(10, 20)
         else:
-            self.delay_time = random.uniform(10, 20)
+            pass
         return self.delay_time
 
 
     def get_repair_time(self):
-        self.repair_time = 60*24
+        self.repair_time = 24*60
         return self.repair_time
 
 
