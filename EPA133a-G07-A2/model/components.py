@@ -1,9 +1,10 @@
 import random
-
 from mesa import Agent
 from enum import Enum
 
 # ---------------------------------------------------------------
+
+
 class Infra(Agent):
     """
     Base class for all infrastructure components
@@ -63,11 +64,9 @@ class Bridge(Infra):
         self.collapse_chance = self.model.collapse_dict.get(self.condition)
         self.in_repair = False
         self.repair_time = self.get_repair_time()
-        # TODO
         self.delay_time = 0
         # print(self.delay_time)
 
-    # TODO
     def get_delay_time(self):
         if self.condition == "X":
             if self.length > self.model.long_length_threshold:
@@ -82,26 +81,25 @@ class Bridge(Infra):
             pass
         return self.delay_time
 
-
     def get_repair_time(self):
         self.repair_time = 24*60
         return self.repair_time
 
-
-
-    # Retrieve bridges name to choose between L/R bridge
     def get_name(self):
+        """
+        Retrieve bridges name to choose between L/R bridge
+        """
         return self.name
 
-    def change_condition(self, new_conditon: str):
+    def change_condition(self, new_condition: str):
         """Change the condition of a bridge to another condition"""
-        self.condition = new_conditon
+        self.condition = new_condition
         return self.condition
 
     def collapse(self):
         """A bridge collapses according to its chance of collapsing.
          A collapsed bridge will get the condition 'X'. """
-        if self.collapse_chance>random.random():
+        if self.collapse_chance > random.random():
             self.change_condition("X")
         else:
             pass
@@ -114,19 +112,21 @@ class Bridge(Infra):
         # or for example,if a small storm happens,bridge conditions can deteriorate.
         # please note that deterioration of a bridge is not the same as collapse of a bridge!
 
-        condition_list = ["A","B","C","D","X"] # list of all possible bridge conditions
+        condition_list = ["A", "B", "C", "D", "X"]  # list of all possible bridge conditions
         # if a bridge is already in the worst condition ("X"), it cannot deteriorate any further
         if self.condition == "X":
             pass
         else:
             # for the remaining conditions, deteriorate the bridge by setting the condition to one condition worse
-            condition_index = condition_list.index(self.condition) # get the index in the condition_list of the current bridge condition
-            self.condition = condition_list[condition_index+1] # increase index by 1 and set that condition to the new current bridge condition
+            # get the index in the condition_list of the current bridge condition
+            condition_index = condition_list.index(self.condition)
+            # increase index by 1 and set that condition to the new current bridge condition
+            self.condition = condition_list[condition_index+1]
             return self.condition
 
     def check_repair(self):
         # if the bridge is not yet in repair, but it is collapsed, set it in repair status
-        if not self.in_repair and self.condition=="X":
+        if not self.in_repair and self.condition == "X":
             self.in_repair = True
             self.delay_time = self.get_delay_time()
         # if bridge is in repair, check if its repair time is already finished
@@ -164,11 +164,13 @@ class Bridge(Infra):
         # Next, check if bridge needs repair and if repair is finished.
         self.check_repair()
 # ---------------------------------------------------------------
+
+
 class Link(Infra):
     pass
-
-
 # ---------------------------------------------------------------
+
+
 class Sink(Infra):
     """
     Sink removes vehicles
@@ -415,5 +417,3 @@ class Vehicle(Agent):
         self.location.vehicle_count += 1
 
 # EOF -----------------------------------------------------------
-
-
