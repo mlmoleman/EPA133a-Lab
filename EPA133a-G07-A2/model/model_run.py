@@ -1,4 +1,5 @@
 from model import BangladeshModel
+import random
 
 """
     Run simulation
@@ -13,7 +14,7 @@ run_length = 5 * 24 * 60
 # run time 1000 ticks
 # run_length = 1000
 
-seed = 1234567
+seed = random.seed()
 
 sim_model = BangladeshModel(seed=seed)
 
@@ -27,5 +28,5 @@ for i in range(run_length):
 model_data = sim_model.datacollector.get_model_vars_dataframe()
 # agent_data = sim_model.datacollector.get_agent_vars_dataframe()
 
-model_data.to_csv("../data/model_data.csv")
+# model_data.to_csv("../data/model_data.csv")
 # agent_data.to_csv("../data/agent_data.csv")

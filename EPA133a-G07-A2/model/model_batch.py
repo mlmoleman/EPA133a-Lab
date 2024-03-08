@@ -9,7 +9,8 @@ from mesa import batch_run
 
 # ---------------------------------------------------------------
 
-params = {"collapse_dict": [{'A': 0, 'B': 0, 'C': 0, 'D': 0.05},
+params = {"collapse_dict": [{'A': 0, 'B': 0, 'C': 0, 'D': 0},
+                            {'A': 0, 'B': 0, 'C': 0, 'D': 0.05},
                             {'A': 0, 'B': 0, 'C': 0, 'D': 0.10},
                             {'A': 0, 'B': 0, 'C': 0.05, 'D': 0.10},
                             {'A': 0, 'B': 0, 'C': 0.10, 'D': 0.20},
@@ -22,10 +23,10 @@ results = batch_run(
     BangladeshModel,
     parameters=params,
     iterations=10,
-    max_steps=100,
+    max_steps=7200,
     number_processes=1,
     data_collection_period=1,
     display_progress=True)
 
 df_results = pd.DataFrame(results)
-print(df_results)
+df_results.to_csv("../data/scenario0.csv")
