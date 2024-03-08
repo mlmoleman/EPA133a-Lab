@@ -25,9 +25,9 @@ def get_avg_driving(model):
     """
     Returns the average driving time of vehicles on road N1
     """
-    driving_time = [a.driving_time for a in model.schedule.agents if isinstance(a, Vehicle)]
-    if len(driving_time) > 0:
-        return mean(driving_time)
+
+    if len(model.driving_time_of_trucks) > 0:
+        return sum(model.driving_time_of_trucks) / len(model.driving_time_of_trucks)
     else:
         return 0
 
@@ -133,7 +133,7 @@ class BangladeshModel(Model):
     step_time = 1
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0,
-                 collapse_dict={'A': 0.10, 'B': 0.10, 'C': 0.10, 'D': 0.10, 'X': 0}):
+                 collapse_dict={'A': 0, 'B': 0, 'C': 0, 'D': 0.05, 'X': 0}):
 
         self.collapse_dict = collapse_dict
         self.schedule = BaseScheduler(self)
@@ -148,6 +148,8 @@ class BangladeshModel(Model):
         self.short_length_threshold = 10
 
         self.generate_model()
+
+        self.driving_time_of_trucks = []
 
     def generate_model(self):
         """

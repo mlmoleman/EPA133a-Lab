@@ -2,6 +2,10 @@ import pandas as pd
 import random
 
 
+import pandas as pd
+import random
+
+
 def convert_data():
     """
     Converts data conform demo data files.
@@ -11,7 +15,7 @@ def convert_data():
     df = pd.read_excel('../data/bridges.xlsx')
 
     # slice data information
-    df = df[["road", "km", "type", "name", "length", "condition", "lat", "lon"]]
+    df = df[["road", "km", "type", "name", "length", "condition", "lat", "lon", "zone"]]
     
     # HANDLING MISSING VALUES
     
@@ -199,12 +203,16 @@ def convert_data():
     # sort values based on km, in reversed direction to drive in opposite direction
     df = df.sort_values(by = 'km', ascending = False)
     
+    # only use centre of Chittagong, around 287 km from Dhaka
+    df = df.loc[df['km'] < 287]
+    
     # reset index
     df = df.reset_index()
     
     # drop unnecessary columns
     df = df.drop("conditionNum", axis='columns')
     df = df.drop("index", axis='columns')
+    df = df.drop("zone", axis='columns')
 
     # import roads to get source and sink
     df_roads = pd.read_csv('../data/roads.csv')
@@ -216,18 +224,21 @@ def convert_data():
     # retrieve source characteristics
     road_name = df_roads_0.road[0]
     km = df_roads_0.chainage[0]
+    lrp = df_roads_0.lrp[0]
     latitude = df_roads_0.lat[0]
     longitude = df_roads_0.lon[0]
-    type_of_bridge = 'sink'
-    bridge_name = 'sink'
+    type_of_bridge = 'source'
+    bridge_name = 'source'
     length = 0
-    condition = None
+    condition = 'A'
     
     # adding new row
-    df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, 
-                  condition, latitude, longitude, type_of_bridge]  
+    df.loc[len(df)] = [road_name, km, type_of_bridge, bridge_name, length, condition, latitude, longitude, type_of_bridge]
     # sort index
     df.sort_index(inplace=True) 
+    
+    # get a point around centre of Chittagong, which is around 288 km away from Dhaka
+    df_roads = df_roads.loc[df_roads['chainage'] < 288]
     
     # assign last column to new dataframe
     df_roads_last = df_roads[-1::]
@@ -236,19 +247,19 @@ def convert_data():
     # retrieve sink characteristics
     road_name = df_roads_last.loc[0, 'road']
     km = df_roads_last.loc[0, 'chainage']
+    lrp = df_roads_last.loc[0, 'lrp']
     latitude = df_roads_last.loc[0, 'lat']
     longitude = df_roads_last.loc[0, 'lon']
-    type_of_bridge = 'source'
-    bridge_name = 'source'
+    type_of_bridge = 'sink'
+    bridge_name = 'sink'
     length = 0
-    condition = None
+    condition = 'A'
     
     # adding new row
     df.loc[-1] = [road_name, km, type_of_bridge, bridge_name, length, 
               condition, latitude, longitude, type_of_bridge]
     # shifting index
-    df.index = df.index + 1
-
+    df.index = df.index + 1  
     # reset index
     df.sort_index(inplace=True) 
     

@@ -348,11 +348,6 @@ class Vehicle(Agent):
         """
         print(self)
 
-        """
-        To compute the driving time at that current step
-        """
-        if self.removed_at_step:
-            self.driving_time = self.removed_at_step - self.generated_at_step
 
     def drive(self):
 
@@ -381,6 +376,8 @@ class Vehicle(Agent):
             # arrive at the sink
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
+            self.driving_time = self.removed_at_step - self.generated_at_step
+            self.model.driving_time_of_trucks.append(self.driving_time)
             self.location.remove(self)
             return
         elif isinstance(next_infra, Bridge):
