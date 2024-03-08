@@ -9,15 +9,7 @@ from mesa import batch_run
 
 # ---------------------------------------------------------------
 
-params = {"collapse_dict": [{'A': 0, 'B': 0, 'C': 0, 'D': 0},
-                            {'A': 0, 'B': 0, 'C': 0, 'D': 0.05},
-                            {'A': 0, 'B': 0, 'C': 0, 'D': 0.10},
-                            {'A': 0, 'B': 0, 'C': 0.05, 'D': 0.10},
-                            {'A': 0, 'B': 0, 'C': 0.10, 'D': 0.20},
-                            {'A': 0, 'B': 0.05, 'C': 0.10, 'D': 0.20},
-                            {'A': 0, 'B': 0.10, 'C': 0.20, 'D': 0.40},
-                            {'A': 0.05, 'B': 0.10, 'C': 0.20, 'D': 0.40},
-                            {'A': 0.10, 'B': 0.20, 'C': 0.40, 'D': 0.80}]}
+params = {"collapse_dict": [{'A': 0, 'B': 0, 'C': 0, 'D': 0}]}
 
 results = batch_run(
     BangladeshModel,
@@ -25,8 +17,18 @@ results = batch_run(
     iterations=10,
     max_steps=7200,
     number_processes=1,
-    data_collection_period=1,
+    data_collection_period=7200,
     display_progress=True)
 
 df_results = pd.DataFrame(results)
-df_results.to_csv("../data/scenario0.csv")
+df_results.to_csv("../data/scenario0_goodone.csv")
+
+# [{'A': 0, 'B': 0, 'C': 0, 'D': 0},
+#                             {'A': 0, 'B': 0, 'C': 0, 'D': 0.05},
+#                             {'A': 0, 'B': 0, 'C': 0, 'D': 0.10},
+#                             {'A': 0, 'B': 0, 'C': 0.05, 'D': 0.10},
+#                             {'A': 0, 'B': 0, 'C': 0.10, 'D': 0.20},
+#                             {'A': 0, 'B': 0.05, 'C': 0.10, 'D': 0.20},
+#                             {'A': 0, 'B': 0.10, 'C': 0.20, 'D': 0.40},
+#                             {'A': 0.05, 'B': 0.10, 'C': 0.20, 'D': 0.40},
+#                             {'A': 0.10, 'B': 0.20, 'C': 0.40, 'D': 0.80}]

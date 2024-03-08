@@ -237,26 +237,26 @@ class BangladeshModel(Model):
                         "step": get_steps,
                         "avg_delay": get_avg_delay,
                         "avg_driving_time": get_avg_driving,
-                        "conditionA": get_condition_frequency_a,
-                        "conditionB": get_condition_frequency_b,
-                        "conditionC": get_condition_frequency_c,
-                        "conditionD": get_condition_frequency_d,
-                        "conditionX": get_condition_frequency_x
+                        # "conditionA": get_condition_frequency_a,
+                        # "conditionB": get_condition_frequency_b,
+                        # "conditionC": get_condition_frequency_c,
+                        # "conditionD": get_condition_frequency_d,
+                        # "conditionX": get_condition_frequency_x
         }
         # define the agent metrics we want to extract for each model run, only for bridges
-        agent_metrics = {
-                        "driving time": (lambda a: a.driving_time if isinstance(a, Vehicle) else None),
-                        "vehicle_count": lambda a: getattr(a, "vehicle_count", None),
-                        "condition": (lambda a: a.condition if isinstance(a, Bridge) else None),
-                        "delay time": (lambda a: a.delay_time if isinstance(a, Bridge) else None),
-                        "repair": (lambda a: a.in_repair if isinstance(a, Bridge) else None),
-                        "repair time": (lambda a: a.repair_time if isinstance(a, Bridge) else None),
-                        "collapse chance": (lambda a: a.collapse_chance if isinstance(a, Bridge) else None),
-                        "waiting time": lambda a: getattr(a, "waiting_time", None)
-                        }
+        # agent_metrics = {
+        #                 "driving time": (lambda a: a.driving_time if isinstance(a, Vehicle) else None),
+        #                 "vehicle_count": lambda a: getattr(a, "vehicle_count", None),
+        #                 "condition": (lambda a: a.condition if isinstance(a, Bridge) else None),
+        #                 "delay time": (lambda a: a.delay_time if isinstance(a, Bridge) else None),
+        #                 "repair": (lambda a: a.in_repair if isinstance(a, Bridge) else None),
+        #                 "repair time": (lambda a: a.repair_time if isinstance(a, Bridge) else None),
+        #                 "collapse chance": (lambda a: a.collapse_chance if isinstance(a, Bridge) else None),
+        #                 "waiting time": lambda a: getattr(a, "waiting_time", None)
+        #                 }
 
         # set up the data collector
-        self.datacollector = DataCollector(model_reporters=model_metrics, agent_reporters=agent_metrics)
+        self.datacollector = DataCollector(model_reporters=model_metrics)
 
     def get_random_route(self, source):
         """
